@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script
+      src="https://kit.fontawesome.com/5bbee51655.js"
+      crossorigin="anonymous"
+    ></script>
+    <title>CSE 391 Assignment 2</title>
+  </head>
+  <body>
+    <header class="header">
+      <nav>
+        <h2 class="nav-style">CSE<span class="primary-color">391</span></h2>
+        <ul>
+          <li><a href="#stopwatch">Stopwatch</a></li>
+          <li><a href="#todo">Todo List</a></li>
+          <li><a href="#fortune">Fortune</a></li>
+        </ul>
+      </nav>
+      <div class="banner">
+        <div class="banner-content">
+          <h3 class="banner-greetings">Welcome to</h3>
+          <h1 class="banner-title">Assignment 2</h1>
+          <p class="banner-description">
+            Interactive JavaScript Applications: Fortune Generator, Stopwatch
+            Timer, and Todo List with Local Storage
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <!-- Stopwatch Section -->
+      <section class="component-section" id="stopwatch">
+        <h3 class="section-title">Stopwatch Timer</h3>
+        <div class="stopwatch-container">
+          <div class="stopwatch-display" id="stopwatch-display">00:00</div>
+          <div class="stopwatch-controls">
+            <button class="primary-button" id="start-btn">
+              <i class="fas fa-play"></i> Start
+            </button>
+            <button class="primary-button" id="stop-btn">
+              <i class="fas fa-pause"></i> Stop
+            </button>
+            <button class="primary-button" id="reset-btn">
+              <i class="fas fa-redo"></i> Reset
+            </button>
+          </div>
+        </div>
+      </section>
+      tion>
+
+      <!-- Todo List Section (Question 3 - 40 Marks) -->
+      <section class="component-section" id="todo">
+        <h3 class="section-title">Smart Todo List</h3>
+        <p class="section-description">
+          Organize your tasks with this intelligent todo list. Features
+          persistent storage and task completion tracking.
+        </p>
+        <div class="todo-container">
+          <div class="todo-input-section">
+            <input
+              type="text"
+              id="todo-input"
+              placeholder="Enter a new task..."
+              maxlength="100"
+            />
+            <button class="primary-button" id="add-todo-btn">
+              <i class="fas fa-plus"></i> Add Task
+            </button>
+          </div>
+          <div class="todo-stats" id="todo-stats">
+            <span>Total: 0</span>
+            <span>Completed: 0</span>
+            <span>Pending: 0</span>
+          </div>
+          <div class="todo-list" id="todo-list">
+            <!-- Todo items will be dynamically inserted here -->
+          </div>
+          <div class="todo-actions">
+            <button class="primary-button clear-btn" id="clear-all-btn">
+              <i class="fas fa-trash-alt"></i> Clear All
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Fortune Generator Section (Question 1 - 25 Marks) -->
+    <section class="fortune-section" id="fortune">
+      <h4 class="fortune-title">Daily Fortune Generator</h4>
+      <div class="fortune-container">
+        <div class="fortune-box" id="fortune-box">
+          <p class="fortune-text" id="fortune-text">Loading your fortune...</p>
+        </div>
+        <div class="fortune-controls">
+          <button
+            class="fortune-btn"
+            id="font-color-btn"
+            title="Change font color"
+          >
+            <i class="fas fa-font"></i>
+          </button>
+          <button
+            class="fortune-btn"
+            id="bg-color-btn"
+            title="Change background"
+          >
+            <i class="fas fa-fill-drip"></i>
+          </button>
+          <button
+            class="fortune-btn"
+            id="border-color-btn"
+            title="Change border"
+          >
+            <i class="fas fa-border-style"></i>
+          </button>
+          <button
+            class="fortune-btn"
+            id="font-style-btn"
+            title="Change font style"
+          >
+            <i class="fas fa-text-height"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="footer-content">
+        <h3 class="section-title">CSE 391 Assignment 2</h3>
+        <p class="section-description">Interactive JavaScript Programming</p>
+        <p class="copyright">© 2025 - Built with HTML, CSS, and JavaScript</p>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
