@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Workshop - Admin Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <h1>🔧 AutoFix Workshop</h1>
+                <p>Expert Car Service & Repairs</p>
+                <nav class="nav-links">
+                    <a href="index.html">Book Appointment</a>
+                    <a href="admin.html" class="active">Admin Panel</a>
+                </nav>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="appointment-section">
+                <div class="section-header">
+                    <h2>Appointment Management</h2>
+                    <p>View, edit, and manage all appointments</p>
+                </div>
+
+                <!-- Admin Filters - Using same form styling as booking form -->
+                <div class="appointment-form" style="margin-bottom: 30px;">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="dateFilter">Date Filter</label>
+                            <input type="date" id="dateFilter" name="dateFilter">
+                        </div>
+                        <div class="form-group">
+                            <label for="mechanicFilter">Mechanic</label>
+                            <select id="mechanicFilter" name="mechanicFilter">
+                                <option value="">All Mechanics</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="statusFilter">Status</label>
+                            <select id="statusFilter" name="statusFilter">
+                                <option value="">All Statuses</option>
+                                <option value="confirmed">Confirmed</option>
+                                <option value="in-progress">In Progress</option>
+                                <option value="completed">Completed</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-primary" id="filterBtn">Filter</button>
+                        <button type="button" class="btn-secondary" id="clearBtn">Clear</button>
+                    </div>
+                </div>
+
+                <!-- Appointments Table - Dark Theme -->
+                <div class="appointments-list">
+                    <div class="table-wrapper">
+                        <table class="appointments-table">
+                            <thead>
+                                <tr>
+                                    <th>Client Name</th>
+                                    <th>Phone</th>
+                                    <th>Car License</th>
+                                    <th>Appointment Date</th>
+                                    <th>Mechanic</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="appointmentsTableBody">
+                                <tr>
+                                    <td colspan="7" style="text-align: center; padding: 20px; color: #ccc;">
+                                        <div class="loading-indicator">
+                                            Loading appointments...
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Success Modal - Same as booking page -->
+        <div class="modal" id="successModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>✅ Status Updated!</h3>
+                </div>
+                <div class="modal-body">
+                    <div id="updateDetails"></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-primary" onclick="closeModal()">OK</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error Modal - Same as booking page -->
+        <div class="modal" id="errorModal">
+            <div class="modal-content">
+                <div class="modal-header error">
+                    <h3>❌ Update Failed</h3>
+                </div>
+                <div class="modal-body">
+                    <p id="errorMessage">Something went wrong. Please try again.</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" onclick="closeErrorModal()">Try Again</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Details Modal -->
+        <div class="modal" id="detailsModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>📋 Appointment Details</h3>
+                </div>
+                <div class="modal-body">
+                    <div id="appointmentDetails"></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" onclick="closeDetailsModal()">Close</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Help Section - Using same styling as booking page help -->
+        <div class="help-section">
+            <h3>Admin Panel Guide</h3>
+            <div class="help-content">
+                <div class="help-item">
+                    <strong>📅 Filter appointments:</strong>
+                    <p>Use date, mechanic, and status filters to find specific appointments.</p>
+                </div>
+                <div class="help-item">
+                    <strong>🔄 Update status:</strong>
+                    <p>Change appointment status using the dropdown and update button.</p>
+                </div>
+                <div class="help-item">
+                    <strong>👁️ View details:</strong>
+                    <p>Click Details button to see complete appointment information.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Dark theme for table - Override any light table styles */
+        .table-wrapper {
+            background: rgba(255, 255, 255, 0.1) !important;
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .appointments-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        /* Dark table header */
+        .appointments-table thead {
+            background: rgba(0, 0, 0, 0.4) !important;
+            backdrop-filter: blur(5px);
+        }
+
+        .appointments-table th {
+            color: white !important;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+            border: none;
+            background: transparent !important;
+        }
+
+        /* Dark table rows */
+        .appointments-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+            background: rgba(255, 255, 255, 0.05) !important;
+            color: white !important;
+        }
+
+        .appointments-table tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        .appointments-table tbody tr:last-child td {
+            border-bottom: none !important;
+        }
+
+        /* Status badges - keep original colors but adjust for dark theme */
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            display: inline-block;
+        }
+
+        .status-confirmed {
+            background: #c6f6d5 !important;
+            color: #22543d !important;
+        }
+
+        .status-in-progress {
+            background: #fbb6ce !important;
+            color: #702459 !important;
+        }
+
+        .status-completed {
+            background: #bee3f8 !important;
+            color: #2a4365 !important;
+        }
+
+        .status-cancelled {
+            background: #fed7d7 !important;
+            color: #742a2a !important;
+        }
+
+        /* Action controls - dark theme */
+        .action-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .status-select {
+            padding: 4px 8px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            font-size: 12px;
+            background: rgba(0, 0, 0, 0.3) !important;
+            color: white !important;
+        }
+
+        .status-select option {
+            background: #1a1f2e !important;
+            color: white !important;
+        }
+
+        .update-btn,
+        .details-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .update-btn {
+            background: #48bb78 !important;
+            color: white !important;
+        }
+
+        .update-btn:hover {
+            background: #38a169 !important;
+            transform: translateY(-1px);
+        }
+
+        .details-btn {
+            background: #4299e1 !important;
+            color: white !important;
+        }
+
+        .details-btn:hover {
+            background: #3182ce !important;
+            transform: translateY(-1px);
+        }
+
+        /* Loading indicator - dark theme */
+        .loading-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: #ccc !important;
+        }
+
+        /* No appointments styling - dark theme */
+        .no-appointments {
+            text-align: center;
+            padding: 40px 20px;
+            color: #ccc !important;
+        }
+
+        .no-appointments h4 {
+            color: white !important;
+            margin-bottom: 10px;
+        }
+
+        /* Responsive design for table */
+        @media (max-width: 768px) {
+            .appointments-table {
+                font-size: 12px;
+            }
+
+            .appointments-table th,
+            .appointments-table td {
+                padding: 8px;
+            }
+
+            .action-controls {
+                flex-direction: column;
+                gap: 4px;
+            }
+
+            .update-btn,
+            .details-btn {
+                padding: 4px 8px;
+                font-size: 10px;
+                width: 100%;
+            }
+        }
+
+        /* Modal error header styling */
+        .modal-header.error {
+            background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+        }
+    </style>
+
+    <script src="admin.js"></script>
+    <script>
+        // Global functions for modals - same as booking page
+        function closeModal() {
+            document.getElementById('successModal').classList.remove('show');
+        }
+
+        function closeErrorModal() {
+            document.getElementById('errorModal').classList.remove('show');
+        }
+
+        function closeDetailsModal() {
+            document.getElementById('detailsModal').classList.remove('show');
+        }
+
+        // Close modals on outside click - same as booking page
+        window.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html>

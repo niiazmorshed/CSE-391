@@ -1,92 +1,127 @@
 const fortunes = [
   "If you win, you live. If you lose, you die. If you don't fight, you can't win! - Eren Yeager",
-  "My Soulders Push Forward, My Soulders Scream Out, My Soulders Rage - Erwin Smith",
+  "My Soldiers Push Forward, My Soldiers Scream Out, My Soldiers Rage - Erwin Smith",
   "Part of the journey is the end. - Tony Stark",
   "Whatever it takes. - Steve Rogers",
   "Power is only given to those who are prepared to lower themselves to pick it up. - King Ragnar",
   "Don't waste your time looking back. You're not going that way. - King Ragnar",
   "I am not in danger. I am the danger. - Walter White",
   "It's easier to stay awake till 6 AM than to wake up at 6 AM",
-  "What we know is just a drop, What we don't know is an ocean -Jonas (Dark)"
-  
+  "What we know is just a drop, What we don't know is an ocean - Jonas (Dark)",
+  "The future belongs to those who believe in the beauty of their dreams. - Eleanor Roosevelt"
 ];
 
-// Display a random fortune when page loads
+// Complete style sets for each button
+const styleThemes = {
+  theme1: {
+    fontColor: "#e74c3c",
+    backgroundColor: "#fdebd0",
+    borderColor: "#c0392b",
+    fontFamily: "Georgia",
+    fontSize: "30px"
+  },
+  theme2: {
+    fontColor: "#27ae60",
+    backgroundColor: "#e8f5e8",
+    borderColor: "#16a085",
+    fontFamily: "Arial",
+    fontSize: "32px"
+  },
+  theme3: {
+    fontColor: "#9b59b6",
+    backgroundColor: "#f4e6ff",
+    borderColor: "#8e44ad",
+    fontFamily: "Times New Roman",
+    fontSize: "28px"
+  },
+  theme4: {
+    fontColor: "#f39c12",
+    backgroundColor: "#fff3cd",
+    borderColor: "#d68910",
+    fontFamily: "Verdana",
+    fontSize: "26px"
+  }
+};
+
 function displayRandomFortune() {
   const fortuneText = document.getElementById("fortune-text");
   if (fortuneText) {
     const randomIndex = Math.floor(Math.random() * fortunes.length);
     fortuneText.textContent = fortunes[randomIndex];
-    console.log(
-      "Random fortune displayed on page load:",
-      fortunes[randomIndex]
-    );
+    console.log("Random fortune", fortunes[randomIndex]);
   }
 }
 
-// Button 1: Change fortune text color randomly
-function changeFontColor() {
+// Button 1: Apply Theme 1 (Red/Warm theme)
+function applyTheme1() {
   const fortuneText = document.getElementById("fortune-text");
-  const colors = [
-    "#fd6e0a",
-    "#2c3e50",
-    "#e74c3c",
-    "#27ae60",
-    "#9b59b6",
-    "#f39c12",
-  ];
-  const randomColor = colors[Math.floor(Math.random() * colors.length)];
-  fortuneText.style.color = randomColor;
-  console.log("Font color changed to:", randomColor);
-}
-
-// Button 2: Change fortune box background color randomly
-function changeBackgroundColor() {
   const fortuneBox = document.getElementById("fortune-box");
-  const colors = [
-    "#fff8f3",
-    "#ecf0f1",
-    "#fdebd0",
-    "#e8f5e8",
-    "#f4e6ff",
-    "#fff3cd",
-  ];
-  const randomColor = colors[Math.floor(Math.random() * colors.length)];
-  fortuneBox.style.backgroundColor = randomColor;
-  console.log("Background color changed to:", randomColor);
+  const theme = styleThemes.theme1;
+  
+  if (fortuneText && fortuneBox) {
+    // Apply all styles at once
+    fortuneText.style.color = theme.fontColor;
+    fortuneText.style.fontFamily = theme.fontFamily;
+    fortuneText.style.fontSize = theme.fontSize;
+    fortuneBox.style.backgroundColor = theme.backgroundColor;
+    fortuneBox.style.borderColor = theme.borderColor;
+    
+    console.log("Theme 1 applied - Red/Warm theme");
+  }
 }
 
-// Button 3: Change fortune box border color randomly
-function changeBorderColor() {
-  const fortuneBox = document.getElementById("fortune-box");
-  const colors = [
-    "#fd6e0a",
-    "#34495e",
-    "#c0392b",
-    "#16a085",
-    "#8e44ad",
-    "#f39c12",
-  ];
-  const randomColor = colors[Math.floor(Math.random() * colors.length)];
-  fortuneBox.style.borderColor = randomColor;
-  console.log("Border color changed to:", randomColor);
-}
-
-// Button 4: Change font family and size slightly
-function changeFontStyle() {
+// Button 2: Apply Theme 2 (Green/Nature theme)
+function applyTheme2() {
   const fortuneText = document.getElementById("fortune-text");
-  const fonts = [
-    { family: "Roboto", size: "28px" },
-    { family: "Georgia", size: "26px" },
-    { family: "Arial", size: "30px" },
-    { family: "Times New Roman", size: "27px" },
-    { family: "Verdana", size: "25px" },
-    { family: "Courier New", size: "24px" },
-  ];
-  const randomFont = fonts[Math.floor(Math.random() * fonts.length)];
-  fortuneText.style.fontFamily = randomFont.family;
-  fortuneText.style.fontSize = randomFont.size;
-  console.log("Font style changed to:", randomFont.family, randomFont.size);
+  const fortuneBox = document.getElementById("fortune-box");
+  const theme = styleThemes.theme2;
+  
+  if (fortuneText && fortuneBox) {
+    // Apply all styles at once
+    fortuneText.style.color = theme.fontColor;
+    fortuneText.style.fontFamily = theme.fontFamily;
+    fortuneText.style.fontSize = theme.fontSize;
+    fortuneBox.style.backgroundColor = theme.backgroundColor;
+    fortuneBox.style.borderColor = theme.borderColor;
+    
+    console.log("Theme 2 applied - Green/Nature theme");
+  }
+}
+
+// Button 3: Apply Theme 3 (Purple/Royal theme)
+function applyTheme3() {
+  const fortuneText = document.getElementById("fortune-text");
+  const fortuneBox = document.getElementById("fortune-box");
+  const theme = styleThemes.theme3;
+  
+  if (fortuneText && fortuneBox) {
+    // Apply all styles at once
+    fortuneText.style.color = theme.fontColor;
+    fortuneText.style.fontFamily = theme.fontFamily;
+    fortuneText.style.fontSize = theme.fontSize;
+    fortuneBox.style.backgroundColor = theme.backgroundColor;
+    fortuneBox.style.borderColor = theme.borderColor;
+    
+    console.log("Theme 3 applied - Purple/Royal theme");
+  }
+}
+
+// Button 4: Apply Theme 4 (Orange/Golden theme)
+function applyTheme4() {
+  const fortuneText = document.getElementById("fortune-text");
+  const fortuneBox = document.getElementById("fortune-box");
+  const theme = styleThemes.theme4;
+  
+  if (fortuneText && fortuneBox) {
+    // Apply all styles at once
+    fortuneText.style.color = theme.fontColor;
+    fortuneText.style.fontFamily = theme.fontFamily;
+    fortuneText.style.fontSize = theme.fontSize;
+    fortuneBox.style.backgroundColor = theme.backgroundColor;
+    fortuneBox.style.borderColor = theme.borderColor;
+    
+    console.log("Theme 4 applied - Orange/Golden theme");
+  }
 }
 
 // STOPWATCH SECTION
@@ -95,50 +130,49 @@ let time = 0;
 let interval = null;
 let isRunning = false;
 const maxTime = 30;
-const increment = 3;
+const increment = 1;
 
 // Start the stopwatch
 function startStopwatch() {
+  time = 0;
+  updateStopwatchDisplay();
   if (!isRunning && time < maxTime) {
     isRunning = true;
     interval = setInterval(() => {
-      time += increment;
+      time += 3;
       updateStopwatchDisplay();
-      console.log("Stopwatch time:", time, "seconds");
 
-      // Auto-stop at 30 seconds
+      //Stop after 30 seconds
       if (time >= maxTime) {
         stopStopwatch();
-        alert("Stopwatch automatically stopped at 30 seconds!");
-        console.log("Stopwatch automatically stopped at 30 seconds");
+        alert("30 seconds! Hoye Gechee");
       }
     }, increment * 1000); // 3000ms = 3 seconds
-    console.log("Stopwatch started");
     updateStopwatchButtons();
   }
 }
 
-// Stop/pause the stopwatch
+// Stop/pause
 function stopStopwatch() {
   if (isRunning) {
     isRunning = false;
+
     clearInterval(interval);
     interval = null;
-    console.log("Stopwatch stopped at:", time, "seconds");
+
     updateStopwatchButtons();
   }
 }
 
-// Reset the stopwatch to 0
+// Reset to 0
 function resetStopwatch() {
   stopStopwatch();
   time = 0;
   updateStopwatchDisplay();
-  console.log("Stopwatch reset to 0");
   updateStopwatchButtons();
 }
 
-// Update the stopwatch display (MM:SS format)
+// Update the stopwatch display
 function updateStopwatchDisplay() {
   const display = document.getElementById("stopwatch-display");
   if (display) {
@@ -166,7 +200,7 @@ function updateStopwatchButtons() {
   }
 }
 
-// TODO LIST SECTION
+// TODOSECTION
 // Todo list state variables
 let todos = [];
 let todoIdCounter = 1;
@@ -182,7 +216,7 @@ function addTodo() {
   }
 
   if (text.length > 100) {
-    alert("Task is too long! Please keep it under 100 characters.");
+    alert("Task is too long! Keep under 100 characters.");
     return;
   }
 
@@ -196,14 +230,14 @@ function addTodo() {
   todos.push(newTodo);
   todoInput.value = "";
   saveTodosToStorage();
-  renderTodos();
-  console.log("Todo added:", newTodo);
+  renderTodos(); //auto relod
 }
 
-// Delete a todo item by ID
+// Delete a todo with id
 function deleteTodo(id) {
-  const index = todos.findIndex((todo) => todo.id === id);
+  const index = todos.findIndex((i) => i.id === id);
   if (index !== -1) {
+    // painai
     const deletedTodo = todos.splice(index, 1)[0];
     saveTodosToStorage(); // Save to local
     renderTodos();
@@ -216,34 +250,32 @@ function toggleTodo(id) {
   const todo = todos.find((todo) => todo.id === id);
   if (todo) {
     todo.completed = !todo.completed;
-    saveTodosToStorage(); // Save to localStorage
+    saveTodosToStorage();
     renderTodos();
-    console.log("Todo toggled:", todo);
+    console.log("Todo Select/Unselect:", todo);
   }
 }
 
-// Clear all todos with confirmation
+// Clear all todos
 function clearAllTodos() {
   if (todos.length === 0) {
-    alert("No tasks to clear!");
+    alert("Task naai !!");
     return;
   }
 
-  if (confirm("Are you sure you want to delete all tasks?")) {
+  if (confirm("You sure??")) {
     todos = [];
-    saveTodosToStorage(); // Save to localStorage
+    saveTodosToStorage();
     renderTodos();
     console.log("All tasks cleared");
   }
 }
 
-// Render all todos to the DOM
+// Render all todos
 function renderTodos() {
   const todoList = document.getElementById("todo-list");
   if (!todoList) return;
-
   todoList.innerHTML = "";
-
   if (todos.length === 0) {
     todoList.innerHTML = `
       <div class="no-todos">
@@ -262,13 +294,13 @@ function renderTodos() {
   updateTodoStats();
 }
 
-// Create HTML element for a single todo item
+// HTML element for a single todo item
 function createTodoElement(todo) {
   const todoItem = document.createElement("div");
   todoItem.className = `todo-item ${todo.completed ? "completed" : ""}`;
   todoItem.dataset.id = todo.id;
 
-  // Escape HTML to prevent XSS attacks
+  // HTML XSS (stack overfollow solve)
   const escapeHtml = (text) => {
     const div = document.createElement("div");
     div.textContent = text;
@@ -343,54 +375,47 @@ function loadTodosFromStorage() {
       const parsed = JSON.parse(data);
       todos = parsed.todos || [];
       todoIdCounter = parsed.nextId || 1;
-      console.log("Todos loaded from localStorage:", todos.length, "items");
+      console.log(todos.length, "items");
 
       if (parsed.lastSaved) {
-        console.log(
-          "Data last saved:",
-          new Date(parsed.lastSaved).toLocaleString()
-        );
+        console.log("last saved:", new Date(parsed.lastSaved).toLocaleString());
       }
     } else {
-      console.log("No previous todos found in localStorage");
+      console.log("No todos found in local");
     }
   } catch (error) {
-    console.error("Error loading from localStorage:", error);
+    console.error("Errorfrom localStorage:", error);
     todos = [];
     todoIdCounter = 1;
   }
 }
 
 // INITIALIZATION SECTION
-// Initialize all components according to assignment requirements
 
 function initializeComponents() {
-  console.log("391 Assignment 2");
-
-  // Initialize Fortune Generator (Question 1)
+  console.log("hellobhai");
   displayRandomFortune();
-
-  // Connect Fortune Generator buttons (4 buttons as per requirement)
   const fontColorBtn = document.getElementById("font-color-btn");
   const bgColorBtn = document.getElementById("bg-color-btn");
   const borderColorBtn = document.getElementById("border-color-btn");
   const fontStyleBtn = document.getElementById("font-style-btn");
 
+  // Updated Fortune Generator Button Connections
   if (fontColorBtn) {
-    fontColorBtn.addEventListener("click", changeFontColor);
-    console.log("Font color button connected");
+    fontColorBtn.addEventListener("click", applyTheme1);
+    console.log("Theme 1 button connected");
   }
   if (bgColorBtn) {
-    bgColorBtn.addEventListener("click", changeBackgroundColor);
-    console.log("Background color button connected");
+    bgColorBtn.addEventListener("click", applyTheme2);
+    console.log("Theme 2 button connected");
   }
   if (borderColorBtn) {
-    borderColorBtn.addEventListener("click", changeBorderColor);
-    console.log("Border color button connected");
+    borderColorBtn.addEventListener("click", applyTheme3);
+    console.log("Theme 3 button connected");
   }
   if (fontStyleBtn) {
-    fontStyleBtn.addEventListener("click", changeFontStyle);
-    console.log("Font style button connected");
+    fontStyleBtn.addEventListener("click", applyTheme4);
+    console.log("Theme 4 button connected");
   }
 
   // Initialize Stopwatch
@@ -454,15 +479,3 @@ document.addEventListener("DOMContentLoaded", () => {
   initializeComponents();
   console.log("Application ready");
 });
-
-// ERROR HANDLING & DEBUGGING
-// Global error handler for debugging
-
-window.addEventListener("error", (e) => {
-  console.error("JavaScript Error:", e.error);
-  console.error("File:", e.filename);
-  console.error("Line:", e.lineno);
-  console.error("Column:", e.colno);
-});
-
-console.log("391 Assignment 2");

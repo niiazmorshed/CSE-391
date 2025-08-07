@@ -1,0 +1,49 @@
+RewriteEngine On
+
+# Enable CORS for API endpoints
+<FilesMatch "\.(php)$">
+    Header always set Access-Control-Allow-Origin "*"
+    Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+    Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
+</FilesMatch>
+
+# Handle preflight OPTIONS requests
+RewriteCond %{REQUEST_METHOD} OPTIONS
+RewriteRule ^(.*)$ $1 [R=200,L]
+
+# Security: Deny access to sensitive files
+<FilesMatch "(^\.|\.(conf|log|ini|json)$)">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Protect composer files
+<FilesMatch "(composer\.(json|lock)|package\.json)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Custom error pages
+ErrorDocument 404 /404.html
+ErrorDocument 500 /500.html
+
+# Cache control for static assets
+<FilesMatch "\.(css|js|png|jpg|jpeg|gif|ico|svg)$">
+    ExpiresActive on
+    ExpiresDefault "access plus 1 month"
+    Header set Cache-Control "public"
+</FilesMatch>
+
+# Compress files for better performance
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
+    AddOutputFilterByType DEFLATE application/json
+</IfModule>

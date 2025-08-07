@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Workshop - Book Appointment</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <h1>🔧 AutoFix Workshop</h1>
+                <p>Expert Car Service & Repairs</p>
+                <nav class="nav-links">
+                    <a href="index.html" class="active">Book Appointment</a>
+                    <a href="admin.html">Admin Panel</a>
+                </nav>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="appointment-section">
+                <div class="section-header">
+                    <h2>Book Your Appointment</h2>
+                    <p>Select your preferred mechanic and schedule your car service</p>
+                </div>
+
+                <!-- Loading indicator -->
+                <div id="loadingIndicator" style="text-align: center; padding: 20px;">
+                    <p>Loading mechanics...</p>
+                </div>
+
+                <!-- Mechanics Grid - Will be populated dynamically -->
+                <div class="mechanics-grid" id="mechanicsGrid" style="display: none;">
+                    <!-- Mechanics will be loaded dynamically -->
+                </div>
+
+                <form class="appointment-form" id="appointmentForm" style="display: none;">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="clientName">Full Name *</label>
+                            <input type="text" id="clientName" name="clientName" required>
+                            <span class="error-message" id="nameError"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="clientPhone">Phone Number *</label>
+                            <input type="tel" id="clientPhone" name="clientPhone" required>
+                            <span class="error-message" id="phoneError"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="clientAddress">Address *</label>
+                        <textarea id="clientAddress" name="clientAddress" rows="3" required></textarea>
+                        <span class="error-message" id="addressError"></span>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="carLicense">Car License Number *</label>
+                            <input type="text" id="carLicense" name="carLicense" required>
+                            <span class="error-message" id="licenseError"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="carEngine">Car Engine Number *</label>
+                            <input type="text" id="carEngine" name="carEngine" required>
+                            <span class="error-message" id="engineError"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="appointmentDate">Appointment Date *</label>
+                            <input type="date" id="appointmentDate" name="appointmentDate" required>
+                            <span class="error-message" id="dateError"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="selectedMechanic">Select Mechanic *</label>
+                            <select id="selectedMechanic" name="selectedMechanic" required>
+                                <option value="">Choose a mechanic</option>
+                            </select>
+                            <span class="error-message" id="mechanicError"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary" id="submitBtn">
+                            <span class="btn-text">Book Appointment</span>
+                            <span class="btn-loader" style="display: none;">Booking...</span>
+                        </button>
+                        <button type="reset" class="btn-secondary">Clear Form</button>
+                    </div>
+                </form>
+
+                <!-- Error display for connection issues -->
+                <div id="connectionError" style="display: none; text-align: center; padding: 20px; color: #e53e3e;">
+                    <h3>Connection Error</h3>
+                    <p id="connectionErrorMessage"></p>
+                    <button onclick="location.reload()" class="btn-secondary">Retry</button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Success Modal -->
+        <div class="modal" id="successModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>✅ Appointment Booked!</h3>
+                </div>
+                <div class="modal-body">
+                    <p>Your appointment has been successfully booked.</p>
+                    <div class="appointment-details" id="appointmentDetails"></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-primary" onclick="closeModal()">OK</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error Modal -->
+        <div class="modal" id="errorModal">
+            <div class="modal-content error">
+                <div class="modal-header">
+                    <h3>❌ Booking Failed</h3>
+                </div>
+                <div class="modal-body">
+                    <p id="errorMessage"></p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" onclick="closeErrorModal()">Try Again</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="help-section">
+            <h3>Need Help?</h3>
+            <div class="help-content">
+                <div class="help-item">
+                    <strong>How to book:</strong>
+                    <p>Fill in your details, select an available mechanic, and choose your preferred date.</p>
+                </div>
+                <div class="help-item">
+                    <strong>Mechanic availability:</strong>
+                    <p>Each mechanic can handle maximum 4 appointments per day. Green indicates available slots.</p>
+                </div>
+                <div class="help-item">
+                    <strong>Appointment policy:</strong>
+                    <p>You can only book one appointment per day. Contact us for urgent services.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // API Configuration
+    const API_BASE_URL = 'http://localhost:8000';
+    
+    // Global variables
+    let mechanics = [];
+    let selectedMechanicId = null;
+    
+    // DOM Elements
+    let mechanicsGrid, appointmentForm, submitBtn, successModal, errorModal;
+    let loadingIndicator, connectionError;
+    
+    // Initialize when DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM loaded, initializing application...');
+        
+        // Get DOM elements
+        mechanicsGrid = document.getElementById('mechanicsGrid');
+        appointmentForm = document.getElementById('appointmentForm');
+        submitBtn = document.getElementById('submitBtn');
+        successModal = document.getElementById('successModal');
+        errorModal = document.getElementById('errorModal');
+        loadingIndicator = document.getElementById('loadingIndicator');
+        connectionError = document.getElementById('connectionError');
+        
+        // Initialize app
+        setMinDate();
+        loadMechanics();
+        setupEventListeners();
+    });
+    
+    // Set minimum date to today
+    function setMinDate() {
+        const today = new Date().toISOString().split('T')[0];
+        const dateInput = document.getElementById('appointmentDate');
+        if (dateInput) {
+            dateInput.setAttribute('min', today);
+        }
+    }
+    
+    // Load mechanics from server
+    async function loadMechanics() {
+        console.log('Loading mechanics from:', API_BASE_URL + '/get_mechanics.php');
+        
+        try {
+            loadingIndicator.style.display = 'block';
+            connectionError.style.display = 'none';
+            
+            const response = await fetch(API_BASE_URL + '/get_mechanics.php');
+            console.log('Response status:', response.status);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            console.log('Received data:', data);
+            
+            if (data.success && data.mechanics) {
+                mechanics = data.mechanics;
+                displayMechanics();
+                populateMechanicSelect();
+                
+                // Show the form and hide loading
+                loadingIndicator.style.display = 'none';
+                mechanicsGrid.style.display = 'grid';
+                appointmentForm.style.display = 'block';
+                
+                console.log('Successfully loaded', mechanics.length, 'mechanics');
+            } else {
+                throw new Error(data.message || 'Failed to load mechanics');
+            }
+            
+        } catch (error) {
+            console.error('Error loading mechanics:', error);
+            loadingIndicator.style.display = 'none';
+            connectionError.style.display = 'block';
+            document.getElementById('connectionErrorMessage').textContent = 
+                'Failed to load mechanics: ' + error.message;
+        }
+    }
+    
+    // Display mechanics in grid
+    function displayMechanics() {
+        if (!mechanicsGrid || !mechanics.length) return;
+        
+        mechanicsGrid.innerHTML = '';
+        
+        mechanics.forEach(mechanic => {
+            const availableSlots = mechanic.available_slots || 4;
+            const mechanicCard = document.createElement('div');
+            mechanicCard.className = `mechanic-card ${getAvailabilityClass(availableSlots)}`;
+            mechanicCard.dataset.mechanicId = mechanic._id;
+            
+            mechanicCard.innerHTML = `
+                <div class="mechanic-name">${mechanic.name}</div>
+                <div class="mechanic-specialization">${mechanic.specialization}</div>
+                <div class="mechanic-experience">${mechanic.experience} years experience</div>
+                <div class="mechanic-availability">
+                    ${availableSlots}/4 slots available
+                </div>
+            `;
+            
+            mechanicCard.addEventListener('click', () => {
+                selectMechanic(mechanic._id, mechanic.name);
+            });
+            
+            mechanicsGrid.appendChild(mechanicCard);
+        });
+    }
+    
+    // Get availability class
+    function getAvailabilityClass(availableSlots) {
+        if (availableSlots === 0) return 'full';
+        if (availableSlots <= 2) return 'busy';
+        return 'available';
+    }
+    
+    // Select a mechanic
+    function selectMechanic(mechanicId, mechanicName) {
+        const mechanic = mechanics.find(m => m._id === mechanicId);
+        const availableSlots = mechanic?.available_slots || 4;
+        
+        if (availableSlots === 0) {
+            showError('This mechanic is fully booked for today. Please select another mechanic.');
+            return;
+        }
+        
+        // Update visual selection
+        document.querySelectorAll('.mechanic-card').forEach(card => {
+            card.classList.remove('selected');
+        });
+        
+        const selectedCard = document.querySelector(`[data-mechanic-id="${mechanicId}"]`);
+        if (selectedCard) {
+            selectedCard.classList.add('selected');
+        }
+        
+        // Update form
+        const mechanicSelect = document.getElementById('selectedMechanic');
+        if (mechanicSelect) {
+            mechanicSelect.value = mechanicId;
+        }
+        
+        selectedMechanicId = mechanicId;
+        console.log('Selected mechanic:', mechanicName, 'ID:', mechanicId);
+    }
+    
+    // Populate mechanic select
+    function populateMechanicSelect() {
+        const mechanicSelect = document.getElementById('selectedMechanic');
+        if (!mechanicSelect || !mechanics.length) return;
+        
+        mechanicSelect.innerHTML = '<option value="">Choose a mechanic</option>';
+        
+        mechanics.forEach(mechanic => {
+            const option = document.createElement('option');
+            option.value = mechanic._id;
+            option.textContent = `${mechanic.name} (${mechanic.available_slots || 4}/4 available)`;
+            option.disabled = (mechanic.available_slots || 4) === 0;
+            mechanicSelect.appendChild(option);
+        });
+    }
+    
+    // Setup event listeners
+    function setupEventListeners() {
+        if (appointmentForm) {
+            appointmentForm.addEventListener('submit', handleFormSubmit);
+        }
+        
+        // Input formatting
+        const phoneInput = document.getElementById('clientPhone');
+        if (phoneInput) {
+            phoneInput.addEventListener('input', function(e) {
+                const value = e.target.value.replace(/\D/g, '');
+                const formatted = value.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
+                e.target.value = formatted;
+            });
+        }
+        
+        const licenseInput = document.getElementById('carLicense');
+        if (licenseInput) {
+            licenseInput.addEventListener('input', function(e) {
+                e.target.value = e.target.value.toUpperCase();
+            });
+        }
+        
+        const engineInput = document.getElementById('carEngine');
+        if (engineInput) {
+            engineInput.addEventListener('input', function(e) {
+                e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+            });
+        }
+        
+        // Mechanic select change
+        const mechanicSelect = document.getElementById('selectedMechanic');
+        if (mechanicSelect) {
+            mechanicSelect.addEventListener('change', function() {
+                if (this.value) {
+                    const mechanic = mechanics.find(m => m._id === this.value);
+                    if (mechanic) {
+                        selectMechanic(this.value, mechanic.name);
+                    }
+                }
+            });
+        }
+    }
+    
+    // Handle form submission
+    async function handleFormSubmit(e) {
+        e.preventDefault();
+        console.log('Form submitted');
+        
+        // Show loading
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Booking...';
+        }
+        
+        // Get form data
+        const formData = {
+            clientName: document.getElementById('clientName').value.trim(),
+            clientPhone: document.getElementById('clientPhone').value.trim(),
+            clientAddress: document.getElementById('clientAddress').value.trim(),
+            carLicense: document.getElementById('carLicense').value.trim(),
+            carEngine: document.getElementById('carEngine').value.trim(),
+            appointmentDate: document.getElementById('appointmentDate').value,
+            mechanicId: selectedMechanicId || document.getElementById('selectedMechanic').value,
+            status: 'confirmed'
+        };
+        
+        console.log('Sending appointment data:', formData);
+        
+        try {
+            const response = await fetch(API_BASE_URL + '/book_appointment.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            });
+            
+            const result = await response.json();
+            console.log('Server response:', result);
+            
+            if (result.success) {
+                showSuccess(result.appointment);
+                appointmentForm.reset();
+                selectedMechanicId = null;
+                loadMechanics(); // Refresh availability
+            } else {
+                showError(result.message || 'Failed to book appointment.');
+            }
+            
+        } catch (error) {
+            console.error('Booking error:', error);
+            showError('Connection error. Please try again.');
+        }
+        
+        // Reset button
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Book Appointment';
+        }
+    }
+    
+    // Show success modal
+    function showSuccess(appointment) {
+        const details = document.getElementById('appointmentDetails');
+        const mechanic = mechanics.find(m => m._id === appointment.mechanicId);
+        
+        if (details) {
+            details.innerHTML = `
+                <strong>Appointment Details:</strong><br>
+                <strong>Date:</strong> ${new Date(appointment.appointmentDate).toDateString()}<br>
+                <strong>Mechanic:</strong> ${mechanic ? mechanic.name : 'Unknown'}<br>
+                <strong>Car:</strong> ${appointment.carLicense}<br>
+                <strong>Status:</strong> ${appointment.status}
+            `;
+        }
+        
+        if (successModal) {
+            successModal.classList.add('show');
+        }
+    }
+    
+    // Show error modal
+    function showError(message) {
+        const errorMessage = document.getElementById('errorMessage');
+        if (errorMessage) {
+            errorMessage.textContent = message;
+        }
+        
+        if (errorModal) {
+            errorModal.classList.add('show');
+        }
+        
+        console.error('Error:', message);
+    }
+    
+    // Close modals
+    function closeModal() {
+        if (successModal) successModal.classList.remove('show');
+    }
+    
+    function closeErrorModal() {
+        if (errorModal) errorModal.classList.remove('show');
+    }
+    
+    // Close modals on outside click
+    window.addEventListener('click', function(e) {
+        if (e.target.classList.contains('modal')) {
+            e.target.classList.remove('show');
+        }
+    });
+    </script>
+</body>
+</html>

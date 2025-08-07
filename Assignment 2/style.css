@@ -271,6 +271,7 @@ main {
     width: 20px;
     height: 20px;
     cursor: pointer;
+
 }
 
 .todo-text {
@@ -283,7 +284,7 @@ main {
 
 .todo-item.completed .todo-text {
     text-decoration: line-through;
-    color: #999;
+    color: #ff0303;
 }
 
 .todo-actions {
